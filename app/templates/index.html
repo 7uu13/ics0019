@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Form with Search and Table</title>
+  </head>
+  <body>
+    <h1>Cafe Management</h1>
+
+    <!-- Get All Cafes -->
+    <h2>All Cafes</h2>
+    <ul id="cafesList">
+      {% for cafe in cafes %}
+      <li>
+        {{ cafe.name }} - {{ cafe.location }}
+        <!-- Edit link that passes the cafe id to the update form -->
+        <a href="{{ url_for('edit_cafe', cafe_id=cafe.id) }}">Edit</a>
+        <a href="{{ url_for('delete_cafe', cafe_id=cafe.id) }}">Delete</a>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <!-- Search Cafe -->
+    <h2>Search for a Cafe</h2>
+    <form action="/search" method="GET">
+      <input
+        type="text"
+        name="query"
+        placeholder="Search cafe by opening time"
+      />
+      <button type="submit">Search</button>
+    </form>
+
+    <ul id="searchResults">
+      {% if results %} {% for cafe in results %}
+      <li>{{ cafe.name }} - {{ cafe.location }} - {{ cafe.time_open }}</li>
+      {% endfor %} {% else %}
+      <li>No cafes found</li>
+      {% endif %}
+    </ul>
+
+    <!-- Add Cafe -->
+    <h2>Add New Cafe</h2>
+    <form action="/add_cafe" method="POST">
+      <input type="text" name="name" placeholder="Cafe Name" required /><br />
+      <input
+        type="text"
+        name="location"
+        placeholder="Location"
+        required
+      /><br />
+      <input
+        type="text"
+        name="operator"
+        placeholder="Operator"
+        required
+      /><br />
+      <input
+        type="text"
+        name="time_open"
+        placeholder="Time Open"
+        required
+      /><br />
+      <input
+        type="text"
+        name="time_close"
+        placeholder="Time Close"
+        required
+      /><br />
+      <button type="submit">Add Cafe</button>
+    </form>
+
+    <!-- Update Cafe (Popup or another page) -->
+    <h2>Update Cafe (Select from All Cafes above)</h2>
+    {% if cafe_to_edit %}
+    <form
+      action="{{ url_for('update_cafe', cafe_id=cafe_to_edit.id) }}"
+      method="POST"
+    >
+      <input
+        type="text"
+        name="updated_item"
+        value="{{ cafe_to_edit.name }}"
+        placeholder="Cafe Name"
+      /><br />
+      <input
+        type="text"
+        name="location"
+        value="{{ cafe_to_edit.location }}"
+        placeholder="Location"
+      /><br />
+      <input
+        type="text"
+        name="operator"
+        value="{{ cafe_to_edit.operator }}"
+        placeholder="Operator"
+      /><br />
+      <input
+        type="text"
+        name="time_open"
+        value="{{ cafe_to_edit.time_open }}"
+        placeholder="Time Open"
+      /><br />
+      <input
+        type="text"
+        name="time_close"
+        value="{{ cafe_to_edit.time_close }}"
+        placeholder="Time Close"
+      /><br />
+      <button type="submit">Update Cafe</button>
+    </form>
+    {% else %}
+    <p>No cafe selected for editing.</p>
+    {% endif %}
+  </body>
+</html>
